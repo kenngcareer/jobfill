@@ -38,7 +38,17 @@
       }
       textarea { resize: vertical; min-height: 60px; }
       .row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-      .actions { display: flex; gap: 8px; margin-top: 16px; }
+      .actions {
+        display: flex;
+        gap: 8px;
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        background: var(--bg);
+        padding: 10px 0;
+        margin: 0 0 4px;
+        border-bottom: 1px solid var(--border);
+      }
       button {
         flex: 1;
         padding: 9px 10px;
@@ -57,6 +67,12 @@
   <body>
     <h1>JobFill</h1>
     <p class="sub">Save your details once, autofill them on any application.</p>
+
+    <div class="actions">
+      <button id="save">Save</button>
+      <button id="fill" class="primary">Autofill page</button>
+    </div>
+    <div class="status" id="status"></div>
 
     <h2>Contact</h2>
     <div class="row">
@@ -114,14 +130,14 @@
     <h2>Work authorization</h2>
     <label>Authorized to work?</label>
     <select id="workAuth">
-      <option value="">—</option>
+      <option value="">â€”</option>
       <option value="Yes">Yes</option>
       <option value="No">No</option>
     </select>
 
     <label>Require sponsorship?</label>
     <select id="sponsorship">
-      <option value="">—</option>
+      <option value="">â€”</option>
       <option value="No">No</option>
       <option value="Yes">Yes</option>
     </select>
@@ -131,28 +147,28 @@
 
     <label>Have you worked here before?</label>
     <select id="workedHere">
-      <option value="">—</option>
+      <option value="">â€”</option>
       <option value="No">No</option>
       <option value="Yes">Yes</option>
     </select>
 
     <label>Relatives / personal relationships at the company?</label>
     <select id="relativesAtCompany">
-      <option value="">—</option>
+      <option value="">â€”</option>
       <option value="No">No</option>
       <option value="Yes">Yes</option>
     </select>
 
     <label>Outside business activity (advisory, board, side biz)?</label>
     <select id="outsideActivity">
-      <option value="">—</option>
+      <option value="">â€”</option>
       <option value="No">No</option>
       <option value="Yes">Yes</option>
     </select>
 
     <label>Consent / privacy policy</label>
     <select id="acknowledge">
-      <option value="">—</option>
+      <option value="">â€”</option>
       <option value="I acknowledge">I acknowledge</option>
       <option value="Yes">Yes / Agree</option>
       <option value="">Leave blank</option>
@@ -162,7 +178,7 @@
     <h2>EEO (optional)</h2>
     <label>Gender</label>
     <select id="gender">
-      <option value="">—</option>
+      <option value="">â€”</option>
       <option value="Male">Male</option>
       <option value="Female">Female</option>
       <option value="Non-binary">Non-binary</option>
@@ -174,7 +190,7 @@
 
     <label>Veteran status</label>
     <select id="veteran">
-      <option value="">—</option>
+      <option value="">â€”</option>
       <option value="I am not a protected veteran">I am not a protected veteran</option>
       <option value="I am a protected veteran">I am a protected veteran</option>
       <option value="Decline to self-identify">Decline to self-identify</option>
@@ -182,7 +198,7 @@
 
     <label>Disability status</label>
     <select id="disability">
-      <option value="">—</option>
+      <option value="">â€”</option>
       <option value="No, I do not have a disability">No</option>
       <option value="Yes, I have a disability">Yes</option>
       <option value="Decline to self-identify">Decline to self-identify</option>

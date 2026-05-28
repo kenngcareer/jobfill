@@ -35,12 +35,12 @@
     const parts = [];
 
     if (el.labels && el.labels.length) {
-      for (const l of el.labels) parts.push(l.innerText || "");
+      for (const l of el.labels) parts.push(l.textContent || "");
     }
     if (el.id) {
       try {
         const lbl = document.querySelector(`label[for="${CSS.escape(el.id)}"]`);
-        if (lbl) parts.push(lbl.innerText || "");
+        if (lbl) parts.push(lbl.textContent || "");
       } catch {}
     }
 
@@ -48,20 +48,20 @@
     const fs = el.closest("fieldset");
     if (fs) {
       const legend = fs.querySelector(":scope > legend");
-      if (legend) parts.push(legend.innerText || "");
+      if (legend) parts.push(legend.textContent || "");
     }
 
     // Walk up a few levels for label / role=group / aria-labelledby containers.
     let p = el.parentElement;
     let depth = 0;
     while (p && depth < 6) {
-      if (p.tagName === "LABEL") parts.push(p.innerText || "");
+      if (p.tagName === "LABEL") parts.push(p.textContent || "");
       if (p.getAttribute && p.getAttribute("role") === "group") {
         const lblId = p.getAttribute("aria-labelledby");
         if (lblId) {
           for (const id of lblId.split(/\s+/)) {
             const n = document.getElementById(id);
-            if (n) parts.push(n.innerText || "");
+            if (n) parts.push(n.textContent || "");
           }
         }
         const aria = p.getAttribute("aria-label");
@@ -76,7 +76,7 @@
     if (aribby) {
       for (const id of aribby.split(/\s+/)) {
         const n = document.getElementById(id);
-        if (n) parts.push(n.innerText || "");
+        if (n) parts.push(n.textContent || "");
       }
     }
 
@@ -135,23 +135,65 @@
     return true;
   }
 
-  // For each radio in the group, look at its own label (Yes / No / etc.) and pick a match.
+  // Only the radio's OWN option label (Yes / No / etc.) — never the surrounding
+  // fieldset legend, otherwise stem words like "now" / "know" steal a "No" match.
+  function radioOwnLabel(el) {
+    const parts = [];
+    if (el.labels && el.labels.length) {
+      for (const l of el.labels) parts.push(l.textContent || "");
+    }
+    if (el.id) {
+      try {
+        const lbl = document.querySelector(`label[for="${CSS.escape(el.id)}"]`);
+        if (lbl) parts.push(lbl.textContent || "");
+      } catch {}
+    }
+    const wrap = el.closest("label");
+    if (wrap) parts.push(wrap.textContent || "");
+    parts.push(el.getAttribute("aria-label") || "");
+    parts.push(el.value || "");
+    return parts.join(" | ").replace(/\s+/g, " ").trim();
+  }
+
+  // Pick the matching radio in a group by its own option label / value.
   function fillRadioGroup(els, value) {
     const target = String(value).toLowerCase().trim();
     if (!target) return false;
 
+    // Pass 1: exact match on the radio's own value or own label.
     let chosen = null;
     for (const r of els) {
-      const lbl = labelTextFor(r).toLowerCase();
-      const v = (r.value || "").toLowerCase();
-      if (v === target || lbl === target) { chosen = r; break; }
+      const lbl = radioOwnLabel(r).toLowerCase();
+      const v = (r.value || "").toLowerCase().trim();
+      if ((v && v === target) || (lbl && lbl === target)) { chosen = r; break; }
     }
+    // Pass 2: WHOLE-WORD match on the radio's own label (so "no" won't match "now").
     if (!chosen) {
+      const safe = target.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      const re = new RegExp(`\\b${safe}\\b`, "i");
       for (const r of els) {
-        const lbl = labelTextFor(r).toLowerCase();
-        const v = (r.value || "").toLowerCase();
-        if (v.includes(target) || target.includes(v) || lbl.includes(target)) { chosen = r; break; }
+        const lbl = radioOwnLabel(r);
+        if (lbl && re.test(lbl)) { chosen = r; break; }
       }
+    }
+    // Pass 3: token overlap + polarity (handles "I am not a protected veteran"
+    // matching the site's "I am not a veteran", and similar verbose-vs-short cases).
+    if (!chosen) {
+      const STOP = new Set(["i","am","a","an","the","is","are","was","were","to","of","in","on","at","my","your","you","we","they","for","or","and","with","by","this","that","do","does","did","have","has","had","will","would","can","could"]);
+      const negRe = /\b(not|don'?t|no|never|isn'?t|aren'?t)\b/i;
+      const toks = s => (s.toLowerCase().match(/[a-z']+/g) || []).filter(w => !STOP.has(w));
+      const tNeg = negRe.test(target);
+      const tToks = new Set(toks(target));
+      let best = null, bestScore = 0;
+      for (const r of els) {
+        const lbl = radioOwnLabel(r);
+        if (!lbl) continue;
+        if (negRe.test(lbl) !== tNeg) continue;
+        let score = 0;
+        for (const w of toks(lbl)) if (tToks.has(w)) score++;
+        if (score > bestScore) { bestScore = score; best = r; }
+      }
+      if (best) chosen = best;
     }
     if (!chosen) return false;
 
