@@ -1,9 +1,18 @@
 const FIELDS = [
   "firstName","lastName","email","phone","city","country",
   "linkedin","website","github","yearsExperience","currentCompany",
-  "currentTitle","workAuth","sponsorship","gender","ethnicity",
-  "veteran","disability","salary","coverLetter"
+  "currentTitle","workAuth","sponsorship",
+  "workedHere","relativesAtCompany","outsideActivity","acknowledge",
+  "gender","ethnicity","veteran","disability","salary","coverLetter"
 ];
+
+// Sensible defaults — applied only the first time the popup loads with no saved profile.
+const DEFAULTS = {
+  workedHere: "No",
+  relativesAtCompany: "No",
+  outsideActivity: "No",
+  acknowledge: "I acknowledge",
+};
 
 const statusEl = document.getElementById("status");
 function flash(msg) {
@@ -16,7 +25,9 @@ async function load() {
   const p = data.profile || {};
   for (const f of FIELDS) {
     const el = document.getElementById(f);
-    if (el && p[f] != null) el.value = p[f];
+    if (!el) continue;
+    if (p[f] != null && p[f] !== "") el.value = p[f];
+    else if (DEFAULTS[f] != null) el.value = DEFAULTS[f];
   }
 }
 
@@ -39,7 +50,7 @@ async function autofill() {
       target: { tabId: tab.id },
       func: () => window.__jobFillRun?.() ?? 0,
     });
-    const count = res?.result ?? 0;
+    const count = await Promise.resolve(res?.result ?? 0);
     flash(count ? `Filled ${count} field${count === 1 ? "" : "s"}` : "No matching fields found");
   } catch (e) {
     flash("Can't run on this page");

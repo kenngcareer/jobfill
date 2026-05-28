@@ -11,6 +11,7 @@
         --border: #e2e8f0;
         --primary: #2563eb;
         --primary-fg: #ffffff;
+        --section-bg: #f8fafc;
       }
       * { box-sizing: border-box; }
       body {
@@ -22,6 +23,7 @@
         color: var(--fg);
       }
       h1 { font-size: 16px; margin: 0 0 4px; }
+      h2 { font-size: 12px; margin: 18px 0 6px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
       p.sub { font-size: 12px; color: var(--muted); margin: 0 0 14px; }
       label { display: block; font-size: 11px; color: var(--muted); margin: 10px 0 4px; text-transform: uppercase; letter-spacing: 0.04em; }
       input, select, textarea {
@@ -49,12 +51,14 @@
       }
       button.primary { background: var(--primary); color: var(--primary-fg); border-color: var(--primary); }
       .status { font-size: 12px; color: var(--muted); margin-top: 10px; min-height: 16px; text-align: center; }
+      .hint { font-size: 11px; color: var(--muted); margin-top: 2px; }
     </style>
   </head>
   <body>
     <h1>JobFill</h1>
     <p class="sub">Save your details once, autofill them on any application.</p>
 
+    <h2>Contact</h2>
     <div class="row">
       <div>
         <label>First name</label>
@@ -92,6 +96,7 @@
     <label>GitHub</label>
     <input id="github" type="url" />
 
+    <h2>Experience</h2>
     <div class="row">
       <div>
         <label>Years of experience</label>
@@ -106,6 +111,7 @@
     <label>Current title</label>
     <input id="currentTitle" />
 
+    <h2>Work authorization</h2>
     <label>Authorized to work?</label>
     <select id="workAuth">
       <option value="">—</option>
@@ -120,6 +126,40 @@
       <option value="Yes">Yes</option>
     </select>
 
+    <h2>Screening questions</h2>
+    <p class="hint">Defaults for common Greenhouse / LinkedIn Easy Apply screening questions.</p>
+
+    <label>Have you worked here before?</label>
+    <select id="workedHere">
+      <option value="">—</option>
+      <option value="No">No</option>
+      <option value="Yes">Yes</option>
+    </select>
+
+    <label>Relatives / personal relationships at the company?</label>
+    <select id="relativesAtCompany">
+      <option value="">—</option>
+      <option value="No">No</option>
+      <option value="Yes">Yes</option>
+    </select>
+
+    <label>Outside business activity (advisory, board, side biz)?</label>
+    <select id="outsideActivity">
+      <option value="">—</option>
+      <option value="No">No</option>
+      <option value="Yes">Yes</option>
+    </select>
+
+    <label>Consent / privacy policy</label>
+    <select id="acknowledge">
+      <option value="">—</option>
+      <option value="I acknowledge">I acknowledge</option>
+      <option value="Yes">Yes / Agree</option>
+      <option value="">Leave blank</option>
+    </select>
+    <p class="hint">Ticks "I acknowledge" / consent checkboxes automatically.</p>
+
+    <h2>EEO (optional)</h2>
     <label>Gender</label>
     <select id="gender">
       <option value="">—</option>
@@ -148,6 +188,7 @@
       <option value="Decline to self-identify">Decline to self-identify</option>
     </select>
 
+    <h2>Other</h2>
     <label>Salary expectation</label>
     <input id="salary" />
 
