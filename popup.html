@@ -1,0 +1,165 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>JobFill</title>
+    <style>
+      :root {
+        --bg: #ffffff;
+        --fg: #0f172a;
+        --muted: #64748b;
+        --border: #e2e8f0;
+        --primary: #2563eb;
+        --primary-fg: #ffffff;
+      }
+      * { box-sizing: border-box; }
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        margin: 0;
+        padding: 16px;
+        width: 340px;
+        background: var(--bg);
+        color: var(--fg);
+      }
+      h1 { font-size: 16px; margin: 0 0 4px; }
+      p.sub { font-size: 12px; color: var(--muted); margin: 0 0 14px; }
+      label { display: block; font-size: 11px; color: var(--muted); margin: 10px 0 4px; text-transform: uppercase; letter-spacing: 0.04em; }
+      input, select, textarea {
+        width: 100%;
+        padding: 7px 9px;
+        font-size: 13px;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        font-family: inherit;
+        color: var(--fg);
+        background: #fff;
+      }
+      textarea { resize: vertical; min-height: 60px; }
+      .row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+      .actions { display: flex; gap: 8px; margin-top: 16px; }
+      button {
+        flex: 1;
+        padding: 9px 10px;
+        font-size: 13px;
+        font-weight: 600;
+        border-radius: 6px;
+        border: 1px solid var(--border);
+        background: #fff;
+        cursor: pointer;
+      }
+      button.primary { background: var(--primary); color: var(--primary-fg); border-color: var(--primary); }
+      .status { font-size: 12px; color: var(--muted); margin-top: 10px; min-height: 16px; text-align: center; }
+    </style>
+  </head>
+  <body>
+    <h1>JobFill</h1>
+    <p class="sub">Save your details once, autofill them on any application.</p>
+
+    <div class="row">
+      <div>
+        <label>First name</label>
+        <input id="firstName" />
+      </div>
+      <div>
+        <label>Last name</label>
+        <input id="lastName" />
+      </div>
+    </div>
+
+    <label>Email</label>
+    <input id="email" type="email" />
+
+    <label>Phone</label>
+    <input id="phone" type="tel" />
+
+    <div class="row">
+      <div>
+        <label>City</label>
+        <input id="city" />
+      </div>
+      <div>
+        <label>Country</label>
+        <input id="country" />
+      </div>
+    </div>
+
+    <label>LinkedIn URL</label>
+    <input id="linkedin" type="url" placeholder="https://linkedin.com/in/..." />
+
+    <label>Portfolio / Website</label>
+    <input id="website" type="url" />
+
+    <label>GitHub</label>
+    <input id="github" type="url" />
+
+    <div class="row">
+      <div>
+        <label>Years of experience</label>
+        <input id="yearsExperience" type="number" min="0" />
+      </div>
+      <div>
+        <label>Current company</label>
+        <input id="currentCompany" />
+      </div>
+    </div>
+
+    <label>Current title</label>
+    <input id="currentTitle" />
+
+    <label>Authorized to work?</label>
+    <select id="workAuth">
+      <option value="">—</option>
+      <option value="Yes">Yes</option>
+      <option value="No">No</option>
+    </select>
+
+    <label>Require sponsorship?</label>
+    <select id="sponsorship">
+      <option value="">—</option>
+      <option value="No">No</option>
+      <option value="Yes">Yes</option>
+    </select>
+
+    <label>Gender</label>
+    <select id="gender">
+      <option value="">—</option>
+      <option value="Male">Male</option>
+      <option value="Female">Female</option>
+      <option value="Non-binary">Non-binary</option>
+      <option value="Decline to self-identify">Decline to self-identify</option>
+    </select>
+
+    <label>Race / Ethnicity</label>
+    <input id="ethnicity" placeholder="e.g. Decline to self-identify" />
+
+    <label>Veteran status</label>
+    <select id="veteran">
+      <option value="">—</option>
+      <option value="I am not a protected veteran">I am not a protected veteran</option>
+      <option value="I am a protected veteran">I am a protected veteran</option>
+      <option value="Decline to self-identify">Decline to self-identify</option>
+    </select>
+
+    <label>Disability status</label>
+    <select id="disability">
+      <option value="">—</option>
+      <option value="No, I do not have a disability">No</option>
+      <option value="Yes, I have a disability">Yes</option>
+      <option value="Decline to self-identify">Decline to self-identify</option>
+    </select>
+
+    <label>Salary expectation</label>
+    <input id="salary" />
+
+    <label>Cover letter / "Why this role?"</label>
+    <textarea id="coverLetter"></textarea>
+
+    <div class="actions">
+      <button id="save">Save</button>
+      <button id="fill" class="primary">Autofill page</button>
+    </div>
+    <div class="status" id="status"></div>
+
+    <script src="popup.js"></script>
+  </body>
+</html>

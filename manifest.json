@@ -1,0 +1,23 @@
+{
+  "manifest_version": 3,
+  "name": "JobFill — Application Autofiller",
+  "version": "1.0.0",
+  "description": "Auto-fill common questions on LinkedIn, Greenhouse, Lever, Workday and other job application forms.",
+  "permissions": ["activeTab", "storage", "scripting"],
+  "host_permissions": ["<all_urls>"],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": "icon.png"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "icons": {
+    "48": "icon.png",
+    "128": "icon.png"
+  }
+}
